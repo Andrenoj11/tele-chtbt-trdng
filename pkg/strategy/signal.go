@@ -49,8 +49,8 @@ func BuildSignal(symbol, interval string, closes []float64, lastPrice float64) S
 	action := "WAIT"
 	conf := "LOW"
 
-	oversold := hasRsi && lastRsi <= 30
-	overbought := hasRsi && lastRsi >= 70
+	oversold := hasRsi && lastRsi <= 40
+	overbought := hasRsi && lastRsi >= 60
 
 	if uptrend && oversold {
 		action, conf = "BUY", "HIGH"
