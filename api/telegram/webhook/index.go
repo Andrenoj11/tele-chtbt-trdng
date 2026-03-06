@@ -10,20 +10,11 @@ import (
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	secret := os.Getenv("TELEGRAM_SECRET_TOKEN")
 
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 		return
-	}
-
-	if secret != "" {
-		got := r.Header.Get("X-Telegram-Bot-Api-Secret-Token")
-		if got != secret {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
 	}
 
 	var u telegram.Update
