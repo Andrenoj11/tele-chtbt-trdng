@@ -27,9 +27,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if ok {
 		reply := bot.HandleIncomingTextTelegram(chatID, text)
 		tok := os.Getenv("TELEGRAM_BOT_TOKEN")
-		if tok != "" {
-			b := telegram.NewBot(tok)
-			_ = b.SendMessage(chatID, reply)
+		if tok == "" {
+			http.Error(w, "TELEGRAM_BOT_TOKEN missing", http.StatusInternalServerError)
+			return
+		}
+		b := telegram.NewBot(tok)
+		if err := b.SendMessage(chatID, reply); err != nil {
+			http.Error(w, "sendMessage failed: "+err.Error(), http.StatusBadGateway)
+			return
 		}
 	}
 
