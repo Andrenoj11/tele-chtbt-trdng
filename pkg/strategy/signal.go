@@ -49,45 +49,25 @@ func BuildSignal(symbol, interval string, closes []float64, lastPrice float64) S
 	action := "WAIT"
 	conf := "LOW"
 
-	// Momentum confirm around RSI 50
-	// - In uptrend, prefer BUY when RSI >= 50
-	// - In downtrend, prefer SELL when RSI <= 50
-	if hasRsi && uptrend && lastRsi >= 50 {
-		action, conf = "BUY", "MEDIUM"
-		reasons = append(reasons, "Uptrend + RSI >= 50 → momentum confirmation")
-	} else if hasRsi && downtrend && lastRsi <= 50 {
-		action, conf = "SELL", "MEDIUM"
-		reasons = append(reasons, "Downtrend + RSI <= 50 → momentum confirmation")
-	} else if uptrend && hasRsi && lastRsi < 50 {
-		action, conf = "WAIT", "LOW"
-		reasons = append(reasons, "Uptrend but RSI < 50 → momentum not confirmed")
-	} else if downtrend && hasRsi && lastRsi > 50 {
-		action, conf = "WAIT", "LOW"
-		reasons = append(reasons, "Downtrend but RSI > 50 → momentum not confirmed")
+	oversold := hasRsi && lastRsi <= 30
+	overbought := hasRsi && lastRsi >= 70
+
+	if uptrend && oversold {
+		action, conf = "BUY", "HIGH"
+		reasons = append(reasons, "Uptrend + RSI oversold → pullback entry signal")
+	} else if downtrend && overbought {
+		action, conf = "SELL", "HIGH"
+		reasons = append(reasons, "Downtrend + RSI overbought → pullback sell/exit signal")
+	} else if uptrend {
+		action, conf = "WAIT", "MEDIUM"
+		reasons = append(reasons, "Trend up, but no oversold confirmation")
+	} else if downtrend {
+		action, conf = "WAIT", "MEDIUM"
+		reasons = append(reasons, "Trend down, but no overbought confirmation")
 	} else {
 		action, conf = "WAIT", "LOW"
-		reasons = append(reasons, "No clear trend/momentum edge")
+		reasons = append(reasons, "No clear trend edge")
 	}
-
-	// oversold := hasRsi && lastRsi <= 50
-	// overbought := hasRsi && lastRsi >= 50
-
-	// if uptrend && oversold {
-	// 	action, conf = "BUY", "HIGH"
-	// 	reasons = append(reasons, "Uptrend + RSI oversold → pullback entry signal")
-	// } else if downtrend && overbought {
-	// 	action, conf = "SELL", "HIGH"
-	// 	reasons = append(reasons, "Downtrend + RSI overbought → pullback sell/exit signal")
-	// } else if uptrend {
-	// 	action, conf = "WAIT", "MEDIUM"
-	// 	reasons = append(reasons, "Trend up, but no oversold confirmation")
-	// } else if downtrend {
-	// 	action, conf = "WAIT", "MEDIUM"
-	// 	reasons = append(reasons, "Trend down, but no overbought confirmation")
-	// } else {
-	// 	action, conf = "WAIT", "LOW"
-	// 	reasons = append(reasons, "No clear trend edge")
-	// }
 
 	return Signal{
 		Symbol:     symbol,
