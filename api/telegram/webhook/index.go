@@ -10,7 +10,7 @@ import (
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-
+	// allow GET for quick test
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
@@ -26,10 +26,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	chatID, text, ok := u.FirstText()
 	if ok {
 		reply := bot.HandleIncomingTextTelegram(chatID, text)
-
 		tok := os.Getenv("TELEGRAM_BOT_TOKEN")
-		b := telegram.NewBot(tok)
-		_ = b.SendMessage(chatID, reply)
+		if tok != "" {
+			b := telegram.NewBot(tok)
+			_ = b.SendMessage(chatID, reply)
+		}
 	}
 
 	w.WriteHeader(http.StatusOK)
