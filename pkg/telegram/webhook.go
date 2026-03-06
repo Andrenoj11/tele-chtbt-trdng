@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"crypto-telegram-bot/internal/bot"
+	"crypto-telegram-bot/pkg/bot"
 )
 
 func WebhookHandler(b *Bot, expectedSecret string) http.HandlerFunc {

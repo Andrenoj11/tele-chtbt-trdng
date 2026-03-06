@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"crypto-telegram-bot/internal/strategy"
+	"crypto-telegram-bot/pkg/strategy"
 )
 
 func FormatReply(s strategy.Signal) string {

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"crypto-telegram-bot/internal/bot"
-	"crypto-telegram-bot/internal/telegram"
+	"crypto-telegram-bot/pkg/bot"
+	"crypto-telegram-bot/pkg/telegram"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {

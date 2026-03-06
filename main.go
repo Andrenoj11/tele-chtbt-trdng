@@ -8,7 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"crypto-telegram-bot/internal/telegram"
+	"crypto-telegram-bot/pkg/telegram"
 )
 
 func main() {

@@ -3,8 +3,8 @@ package bot
 import (
 	"fmt"
 
-	"crypto-telegram-bot/internal/binance"
-	"crypto-telegram-bot/internal/strategy"
+	"crypto-telegram-bot/pkg/binance"
+	"crypto-telegram-bot/pkg/strategy"
 )
 
 func HandleIncomingTextTelegram(chatID int64, text string) string {
