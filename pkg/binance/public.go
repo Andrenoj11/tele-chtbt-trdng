@@ -61,7 +61,7 @@ func GetKlines(symbol, interval string, limit int) ([]Kline, error) {
 	return out, nil
 }
 
-func GetMarkPrice(symbol string) (float64, error) {
+func GetPrice(symbol string) (float64, error) {
 	// spot price
 	url := fmt.Sprintf("%s/api/v3/ticker/price?symbol=%s", apiBase(), symbol)
 

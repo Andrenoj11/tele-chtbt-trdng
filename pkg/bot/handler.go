@@ -19,7 +19,7 @@ func HandleIncomingTextTelegram(chatID int64, text string) string {
 		return fmt.Sprintf("Error fetching market data for %s %s: %v", p.Symbol, p.Interval, err)
 	}
 
-	price, err := binance.GetMarkPrice(p.Symbol)
+	price, err := binance.GetPrice(p.Symbol)
 	if err != nil {
 		return fmt.Sprintf("Error fetching price for %s: %v", p.Symbol, err)
 	}
@@ -37,7 +37,7 @@ func helpText() string {
 	return `Commands:
 - /analyze BTCUSDT 15m
 - /analyze ETHUSDT 1h
-- HELP
+- /start or /help
 
 Notes:
 - Suggest-only (BUY/SELL/WAIT), not financial advice.
