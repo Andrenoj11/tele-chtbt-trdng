@@ -41,5 +41,5 @@ func helpText() string {
 
 Notes:
 - Suggest-only (BUY/SELL/WAIT), not financial advice.
-- Uses Binance USDⓈ-M Futures market data (demo by default).`
+- Uses Binance SPOT market data (data-api.binance.vision).`
 }
