@@ -13,7 +13,7 @@ var (
 type Parsed struct {
 	Symbol   string
 	Interval string
-	Command  string // ANALYZE / HELP
+	Command  string // ANALYZE / HELP / PRICE / CHART
 }
 
 func ParseMessage(msg string) Parsed {
@@ -32,15 +32,29 @@ func ParseMessage(msg string) Parsed {
 
 	out := Parsed{Command: "ANALYZE", Symbol: "", Interval: "15m"}
 
-	if len(parts) > 0 && (parts[0] == "/HELP" || parts[0] == "/START") {
-		out.Command = "HELP"
-		return out
+	// command routing
+	if len(parts) > 0 {
+		switch parts[0] {
+		case "/HELP", "/START":
+			out.Command = "HELP"
+			return out
+		case "/PRICE":
+			out.Command = "PRICE"
+			parts = parts[1:]
+		case "/CHART":
+			out.Command = "CHART"
+			parts = parts[1:]
+		case "/ANALYZE":
+			out.Command = "ANALYZE"
+			parts = parts[1:]
+		default:
+			// unknown command -> show help
+			out.Command = "HELP"
+			return out
+		}
 	}
 
-	if len(parts) > 0 && parts[0] == "/ANALYZE" {
-		parts = parts[1:]
-	}
-
+	// parse args (symbol, interval)
 	for _, p := range parts {
 		if reSymbol.MatchString(p) {
 			out.Symbol = p
@@ -50,40 +64,12 @@ func ParseMessage(msg string) Parsed {
 		}
 	}
 
+	// defaults
 	if out.Symbol == "" {
 		out.Symbol = "BTCUSDT"
 	}
+
+	// for /price, interval not required; keep default 15m (harmless)
+
 	return out
 }
-
-// func ParseMessage(msg string) Parsed {
-// 	parts := strings.Fields(strings.ToUpper(strings.TrimSpace(msg)))
-
-// 	out := Parsed{Command: "ANALYZE", Symbol: "", Interval: "15m"}
-
-// 	if len(parts) > 0 && (parts[0] == "HELP" || parts[0] == "/HELP" || parts[0] == "START" || parts[0] == "/START") {
-// 		out.Command = "HELP"
-// 		return out
-// 	}
-
-// 	if len(parts) > 0 && (parts[0] == "ANALYZE" || parts[0] == "/ANALYZE") {
-// 		parts = parts[1:]
-// 	}
-
-// 	for _, p := range parts {
-// 		if reSymbol.MatchString(p) {
-// 			out.Symbol = p
-// 		}
-// 		if reInterval.MatchString(strings.ToLower(p)) {
-// 			out.Interval = strings.ToLower(p)
-// 		}
-// 	}
-
-// 	if out.Symbol == "" && len(parts) > 0 && reSymbol.MatchString(parts[0]) {
-// 		out.Symbol = parts[0]
-// 	}
-// 	if out.Symbol == "" {
-// 		out.Symbol = "BTCUSDT"
-// 	}
-// 	return out
-// }
